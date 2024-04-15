@@ -14,7 +14,7 @@ const NoteCard = ({ note, onDelete, onEdit, onView }) => {
                 <div className="w-[20px] h-[20px] cursor-pointer hover:shadow-outline">
                     <EditIcon style={{fontSize:'20px', color:'green'}} />
                 </div>
-                <div className="w-[20px] h-[20px] cursor-pointer hover:shadow-outline">
+                <div onClick={()=>onView(note)} className="w-[20px] h-[20px] cursor-pointer hover:shadow-outline">
                     <RemoveRedEyeIcon style={{fontSize:'20px', color:'grey'}} />
                 </div>
             </div>
