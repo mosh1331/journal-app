@@ -1,6 +1,7 @@
 import { Modal } from '@mui/material'
 import React from 'react'
 import CloseIcon from '@mui/icons-material/Close';
+
 const ModalView = ({ isVisibile, note, onModalClose }) => {
     return (
         <Modal
@@ -11,8 +12,8 @@ const ModalView = ({ isVisibile, note, onModalClose }) => {
                 <div onClick={onModalClose} className="h-6 w-6 absolute top-[10px] right-[10px] cursor-pointer">
                     <CloseIcon />
                 </div>
-                <h3 className='font-bold text-[20px]'>{note?.title}</h3>
-                <p className='text-[16px] mt-4 text-[#595454]'>{note?.content}</p>
+                <h3 className='font-bold text-[20px]'>{note?.journalTitle}</h3>
+                <p className='text-[16px] mt-4 text-[#595454]'>{note?.journalDescription}</p>
             </div>
         </Modal>
     )
