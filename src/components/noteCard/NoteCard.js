@@ -45,7 +45,7 @@ const NoteCard = ({ note, onDelete, onEdit, onView }) => {
         </MenuItem>
         <MenuItem onClick={() =>  {
           handleClose()
-          onEdit(note)
+          onView(note)
         }}>
           <p className=' text-sm'>View</p>{' '}
         </MenuItem>
