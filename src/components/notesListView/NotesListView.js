@@ -3,23 +3,49 @@ import AddNoteForm from '../addNoteForm/AddNoteForm'
 import NoteCard from '../noteCard/NoteCard'
 import ModalView from '../modalView/ModalView'
 import { Modal } from '@mui/material'
+import axios from 'axios'
+import { useUser } from '@clerk/clerk-react'
+import EditNoteForm from '../editNoteForm/EditNoteForm'
 
 function NotesListView() {
     const [notes, setNotes] = useState([])
     const [selectedNote, setSelectedNote] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false)
-    const [isFormVisible, setIsFormVisible] = useState(false)
+    const [isAddFormVisible, setIsAddFormVisible] = useState(false)
+    const [isEditFormVisible, setIsEditFormVisible] = useState(false)
 
-    const handleAddNote = newNote => {
+    
+
+  const {user} = useUser()
+
+
+    const handleAddNote =async newNote => {
         // Add the new note to the existing array of notes
-        const noteId = Date.now()
-        const noteWithId = { id: noteId, ...newNote }
-        setNotes([...notes, noteWithId])
-        setIsFormVisible(false)
+        const {title,content} = newNote
+        const data = {title:title,description:content,userID:user?.id}
+        await axios.post('http://localhost:8080/add-journal',data).then(res => console.log(res,'res')).catch(err => console.log(err,'error'))
+        setIsAddFormVisible(false)
     }
 
-    const onDelete = () => { }
-    const onEdit = () => { }
+    const handleUpdateNote =async (note) => {
+        const {title,content,id} = note
+        const data = {journalTitle:title,journalDescription:content}
+        await axios.put(`http://localhost:8080/update-journal/${id}`,data).then(res => console.log(res,'res')).catch(err => console.log(err,'error'))
+        setIsEditFormVisible(false)
+     }
+
+
+    const onDelete =async (journalID) => { 
+        //todo show success and error message
+        await axios.delete(`http://localhost:8080/remove-journal/${journalID}`).then(res => getAllNotesForUser()).catch(err => console.log(err,'error in deletion'))
+
+    }
+
+    const onEdit = (note) => {
+        setSelectedNote(note)
+        setIsEditFormVisible(true)
+     }
+
     const onView = note => {
         setSelectedNote(note)
         setIsModalVisible(true)
@@ -32,36 +58,52 @@ function NotesListView() {
 
     const onFormClose = () => { }
 
+    const getAllNotesForUser = async () => {
+        const userId = user?.id
+        const res = await axios(`http://localhost:8080/get-user-journal/${userId}`)
+        setNotes(res.data)
+    }
+
+    useEffect(()=>{
+        if(!isAddFormVisible || !isEditFormVisible){
+            getAllNotesForUser()
+        }
+    },[isAddFormVisible,isEditFormVisible])
+
     return (
         <div className='flex flex-col w-full items-start'>
             <div className="flex justify-end w-full">
-                <div onClick={() => setIsFormVisible(true)} className="bg-blue-500 cursor-pointer hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <div onClick={() => setIsAddFormVisible(true)} className="bg-blue-500 cursor-pointer hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Add Note
                 </div>
             </div>
             <div className="fixed bottom-[100px]  right-[60px]">
                 <p className="text-sm">Total Notes : {notes.length} </p>
             </div>
-          {notes.length > 0 ?   <div className='mt-4 flex flex-wrap gap-2'>
+            {notes.length > 0 ? <div className='mt-4 flex flex-wrap gap-2'>
                 {notes.map((note, index) => (
                     <NoteCard
-                        key={index}
+                        key={note?.journalID}
                         note={note}
                         onDelete={onDelete}
                         onEdit={onEdit}
                         onView={onView}
                     />
                 ))}
-            </div>: <div className='grid place-content-center h-[60vh] w-full text-2xl'>
+            </div> : <div className='grid place-content-center h-[60vh] w-full text-2xl'>
                 No notes found
-                </div>}
+            </div>}
             <ModalView
                 isVisibile={isModalVisible}
                 note={selectedNote}
                 onModalClose={onModalClose}
             />
-            <Modal open={isFormVisible} onClose={onFormClose}>
-                <AddNoteForm onAddNote={handleAddNote} closeModal={() => setIsFormVisible(false)} />
+            <Modal open={isAddFormVisible} onClose={onFormClose}>
+                <AddNoteForm onAddNote={handleAddNote} closeModal={() => setIsAddFormVisible(false)}  />
+            </Modal>
+
+            <Modal open={isEditFormVisible} onClose={onFormClose}>
+                <EditNoteForm onNoteUpdate={handleUpdateNote} closeModal={() => setIsEditFormVisible(false)} selectedNote={selectedNote}  />
             </Modal>
         </div>
     )
