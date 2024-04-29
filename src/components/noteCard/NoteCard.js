@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Button, Menu, MenuItem } from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
-const NoteCard = ({ note, onDelete, onEdit, onView }) => {
+const NoteCard = ({ note, onDelete, onEdit, onView, randomUrl }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClick = event => {
@@ -14,10 +14,26 @@ const NoteCard = ({ note, onDelete, onEdit, onView }) => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const imgUrl = note?.imgURL ? note.imgUrl:randomUrl 
+
+  function trimString(str, maxLength = 10) {
+    if (str.length > maxLength) {
+      return str.substring(0, maxLength) + '...';
+    }
+    return str;
+  }
+  
+  
   return (
-    <div className='rounded p-4 h-[200px] w-[300px] border-2 relative cursor-pointer'>
-      <h3>{note?.journalTitle}</h3>
-      <p>{note?.journalDescription}</p>
+    <div className='rounded  h-[200px] w-[300px] border-2 relative cursor-pointer'>
+      <div className="w-full h-[85%] relative">
+        <img src={imgUrl} className='w-full h-full block' alt="" />
+        <p className="text-[8px] font-bold absolute font-Roboto bottom-[2px] right-[2px]">{note?.date}</p>
+      </div>
+      <div className="p-2">
+        <h3 className='font-Roboto text-sm'>{trimString(note?.journalTitle,15)}</h3>
+      </div>
       <div
         id='basic-button'
         aria-controls={open ? 'basic-menu' : undefined}
@@ -43,7 +59,7 @@ const NoteCard = ({ note, onDelete, onEdit, onView }) => {
         }}>
           <p className=' text-sm'>Edit</p>
         </MenuItem>
-        <MenuItem onClick={() =>  {
+        <MenuItem onClick={() => {
           handleClose()
           onView(note)
         }}>
