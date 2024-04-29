@@ -15,7 +15,9 @@ const NoteCard = ({ note, onDelete, onEdit, onView, randomUrl }) => {
     setAnchorEl(null)
   }
 
-  const imgUrl = note?.imgURL ? note.imgUrl:randomUrl 
+  const imgUrl = note.imgURl ? note.imgURl:randomUrl 
+
+  console.log(note , imgUrl )
 
   function trimString(str, maxLength = 10) {
     if (str.length > maxLength) {
@@ -27,8 +29,8 @@ const NoteCard = ({ note, onDelete, onEdit, onView, randomUrl }) => {
   
   return (
     <div className='rounded  h-[200px] w-[300px] border-2 relative cursor-pointer'>
-      <div className="w-full h-[85%] relative">
-        <img src={imgUrl} className='w-full h-full block' alt="" />
+      <div className="w-full h-[85%] relative ">
+        <img src={imgUrl} className='w-full h-full block object-cover' alt="" />
         <p className="text-[8px] font-bold absolute font-Roboto bottom-[2px] right-[2px]">{note?.date}</p>
       </div>
       <div className="p-2">

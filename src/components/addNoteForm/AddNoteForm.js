@@ -70,7 +70,7 @@ function AddNoteForm({ onAddNote, closeModal }) {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline min-h-[40vh]"
                 ></textarea>
             </div>
-             <input type="file" onChange={(event) => onFileSelected(event)} />
+             <input accept="image/jpeg, image/png" type="file" onChange={(event) => onFileSelected(event)} />
             {fileUploading ? <p className="text-sm font-Roboto">
                 Uploading....
             </p>:null}

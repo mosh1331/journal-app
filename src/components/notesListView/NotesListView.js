@@ -19,7 +19,7 @@ function NotesListView () {
 
   const handleAddNote = async newNote => {
     const { title, content, mediaFileUrl, date } = newNote
-    const data = { title: title, description: content, userID: user?.id,imgUrl:mediaFileUrl,date:date}
+    const data = { title: title, description: content, userID: user?.id,journalImage:mediaFileUrl,date:date}
     await axios
       .post(`${Base_Url}add-journal`, data)
       .then(res => console.log(res, 'res'))

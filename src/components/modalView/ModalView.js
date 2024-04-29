@@ -4,7 +4,8 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const ModalView = ({ isVisibile, note, onModalClose,randomUrl }) => {
 
-    const imgUrl = note?.imgURL ? note.imgUrl:randomUrl 
+    const imgUrl = note?.imgURl ? note.imgURl:randomUrl 
+    
     return (
         <Modal
             open={isVisibile}
@@ -15,7 +16,7 @@ const ModalView = ({ isVisibile, note, onModalClose,randomUrl }) => {
                     <CloseIcon />
                 </div>
                 <div className="w-full h-1/2 ">
-                    <img src={imgUrl} className='w-full h-full block' />
+                    <img src={imgUrl} className='w-full h-full block object-cover'  />
                 </div>
                 <div className='p-12'>
                 <h3 className='font-bold text-[20px]'>{note?.journalTitle}</h3>
